@@ -58,6 +58,7 @@ let books = [
     id: "afa5de00-344d-11e9-a414-719c6709cf3e",
     genres: ["refactoring"],
   },
+
   {
     title: "Refactoring to patterns",
     published: 2008,
@@ -98,11 +99,13 @@ const typeDefs = gql`
     title: String!
     author: String!
     published: Int!
+    genres: [String]!
     id: ID!
   }
   type Query {
     authorCount: Int!
     bookCount: Int!
+    allBooks: [Book!]!
   }
 `;
 
@@ -110,6 +113,7 @@ const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
+    allBooks: () => books,
   },
 };
 
