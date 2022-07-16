@@ -88,7 +88,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
-    booksPerAuthor: Int!
+    bookCount: Int!
     id: ID!
   }
   type Book {
@@ -101,7 +101,7 @@ const typeDefs = gql`
   type Query {
     authorCount: Int!
     bookCount: Int!
-    allBooks: [Book!]!
+    allBooks(author: String): [Book!]!
     allAuthors: [Author!]!
   }
 `;
@@ -110,12 +110,15 @@ const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
-    allBooks: () => books,
+    // Must pass root
+    allBooks: (root, args) => {
+      if (!args.author) return books;
+      return books.filter((book) => book.author.includes(args.author));
+    },
     allAuthors: () => authors,
   },
-
   Author: {
-    booksPerAuthor: (root) =>
+    bookCount: (root) =>
       books.filter((book) => book.author === root.name).length,
   },
 };
@@ -123,5 +126,5 @@ const resolvers = {
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+  console.log(`🚀 Server ready at ${url} 🚀`);
 });
