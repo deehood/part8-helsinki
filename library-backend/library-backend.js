@@ -1,4 +1,9 @@
-const { ApolloServer, UserInputError, gql } = require("apollo-server");
+const {
+    ApolloServer,
+    AuthenticationError,
+    UserInputError,
+    gql,
+} = require("apollo-server");
 const jwt = require("jsonwebtoken");
 const { UniqueDirectiveNamesRule } = require("graphql");
 const { v4: uuid } = require("uuid");
@@ -174,6 +179,9 @@ const resolvers = {
     },
 
     Query: {
+        me: (root, args, context) => {
+            return context.currentUser;
+        },
         authorCount: async () => Author.collection.countDocuments(),
         bookCount: async () => Book.collection.countDocuments(),
 
@@ -205,7 +213,10 @@ const resolvers = {
     },
 
     Mutation: {
-        addBook: async (root, args) => {
+        addBook: async (root, args, context) => {
+            if (!context.currentUser) {
+                throw new AuthenticationError("not authenticated");
+            }
             const found = await Author.findOne({ name: args.author });
 
             let newAuthorObj = {};
@@ -234,7 +245,10 @@ const resolvers = {
             }
             return book;
         },
-        editAuthor: async (root, args) => {
+        editAuthor: async (root, args, context) => {
+            if (!context.currentUser) {
+                throw new AuthenticationError("not authenticated");
+            }
             console.log("resolver", args);
             const author = await Author.findOneAndUpdate(
                 {
@@ -242,7 +256,8 @@ const resolvers = {
                 },
                 {
                     born: args.bornChange,
-                }
+                },
+                { new: true }
             );
 
             return author;
@@ -263,7 +278,7 @@ const resolvers = {
         login: async (root, args) => {
             const user = await User.findOne({ username: args.username });
 
-            if (!user || args.password !== "secret") {
+            if (!user || args.password !== JWT_SECRET) {
                 throw new UserInputError("wrong credentials");
             }
             const userForToken = {
@@ -276,7 +291,19 @@ const resolvers = {
     },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null;
+        if (auth && auth.toLowerCase().startsWith("bearer ")) {
+            const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+            const currentUser = await User.findById(decodedToken.id);
+
+            return { currentUser };
+        }
+    },
+});
 
 server.listen().then(({ url }) => {
     console.log(`🚀 Server ready at ${url} 🚀`);
