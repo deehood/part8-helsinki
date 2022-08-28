@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { setContext } from "@apollo/client/link/context";
 import App from "./App";
 import {
     ApolloClient,
@@ -8,9 +7,11 @@ import {
     HttpLink,
     InMemoryCache,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem("user-token");
+const authLink = setContext(async (_, { headers }) => {
+    const token = await localStorage.getItem("user-token");
+
     return {
         headers: {
             ...headers,
@@ -28,8 +29,7 @@ const client = new ApolloClient({
     link: authLink.concat(httpLink),
 });
 
-const container = document.getElementById("root");
-const root = createRoot(container);
+const root = createRoot(document.getElementById("root"));
 root.render(
     <ApolloProvider client={client}>
         <App />

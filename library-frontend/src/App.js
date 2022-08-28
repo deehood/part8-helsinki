@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
+import { useApolloClient } from "@apollo/client";
 
 const App = () => {
     const [page, setPage] = useState("authors");
     const [token, setToken] = useState(null);
+
+    const client = useApolloClient();
+
+    useEffect(() => {
+        async function checkToken() {
+            const token = await localStorage.getItem("user-token");
+            setToken(token);
+        }
+        checkToken();
+    }, []);
 
     return (
         <div>
@@ -22,7 +33,8 @@ const App = () => {
                     <button
                         onClick={() => {
                             setToken(null);
-                            localStorage.setItem("user-token", null);
+                            localStorage.clear();
+                            client.resetStore();
                         }}
                     >
                         logout
