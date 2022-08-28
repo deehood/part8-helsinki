@@ -18,11 +18,15 @@ const Login = ({ setPage, setToken, show }) => {
     };
     useEffect(() => {
         if (result.data) {
-            const token = result.data.login.value;
-            setToken(token);
-            localStorage.setItem("user-token", token);
+            async function setAccess() {
+                const token = result.data.login.value;
+                setToken(token);
+                await localStorage.setItem("user-token", token);
+                setPage("authors");
+            }
+
+            setAccess();
             console.log(`logged in`);
-            setPage("authors");
         }
     }, [result.data]);
 

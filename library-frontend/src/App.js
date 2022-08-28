@@ -12,15 +12,17 @@ const App = () => {
     //use it to clean the  apollo store
     const client = useApolloClient();
 
-    // refresh app checks for jwt in localstorage  , maybe could  check if can get jwt from apollo
+    // refresh app checks for jwt in localStorage  , maybe could  check if can get jwt from apollo
 
     useEffect(() => {
-        async function checkToken() {
-            const token = await localStorage.getItem("user-token");
-            setToken(token);
+        if (!token) {
+            async function checkToken() {
+                const token = await localStorage.getItem("user-token");
+                setToken(token);
+            }
+            checkToken();
         }
-        checkToken();
-    }, []);
+    }, [token]);
 
     return (
         <div>
