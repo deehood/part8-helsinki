@@ -11,14 +11,17 @@ const Login = ({ setPage, setToken, show }) => {
             console.log(error.graphQLErrors[0].message);
         },
     });
+
+    const cleanFields = () => {
+        setUsername("");
+        setPassword("");
+    };
     useEffect(() => {
         if (result.data) {
             const token = result.data.login.value;
             setToken(token);
             localStorage.setItem("user-token", token);
-            console.log(`logged in as ${username}`);
-            setUsername("");
-            setPassword("");
+            console.log(`logged in`);
             setPage("authors");
         }
     }, [result.data]);
@@ -30,6 +33,7 @@ const Login = ({ setPage, setToken, show }) => {
     const submit = (e) => {
         e.preventDefault();
         login({ variables: { username, password } });
+        cleanFields();
     };
 
     return (
