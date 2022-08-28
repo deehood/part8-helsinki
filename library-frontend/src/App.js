@@ -9,7 +9,10 @@ const App = () => {
     const [page, setPage] = useState("authors");
     const [token, setToken] = useState(null);
 
+    //use it to clean the  apollo store
     const client = useApolloClient();
+
+    // refresh app checks for jwt in localstorage  , maybe could  check if can get jwt from apollo
 
     useEffect(() => {
         async function checkToken() {
