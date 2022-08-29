@@ -3,6 +3,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
+import Recommend from "./components/Recommend";
 import { useApolloClient } from "@apollo/client";
 
 const App = () => {
@@ -56,6 +57,7 @@ const App = () => {
             <Authors token={token} show={page === "authors"} />
             <Books show={page === "books"} />
             <NewBook show={page === "add"} />
+            <Recommend show={page === "recommend"} />
             <Login
                 setPage={setPage}
                 setToken={setToken}
