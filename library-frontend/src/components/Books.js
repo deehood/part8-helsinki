@@ -13,17 +13,30 @@ const Books = (props) => {
     }
 
     if (result.error) return <>{result.error.message}</>;
-    else
+    else {
+        let uniqueGenresSet = new Set(
+            result.data.allBooks.map((obj) => obj.genres).flat()
+        );
+
+        console.log(uniqueGenresSet);
+
+        const uniqueGenresArray = [...uniqueGenresSet];
         return (
             <div>
                 <h2>books</h2>
+                <b>Genres</b>
+                <br />
+                {uniqueGenresArray.map((genre, index) => (
+                    <button key={index}>{genre}</button>
+                ))}
 
                 <table>
                     <tbody>
                         <tr>
-                            <th></th>
+                            <th>books</th>
                             <th>author</th>
                             <th>published</th>
+                            <th>genres</th>
                         </tr>
 
                         {result.data.allBooks.map((a) => (
@@ -31,12 +44,14 @@ const Books = (props) => {
                                 <td>{a.title}</td>
                                 <td>{a.author.name}</td>
                                 <td>{a.published}</td>
+                                <td>{a.genres.map((a) => a + ", ")}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
         );
+    }
 };
 
 export default Books;
