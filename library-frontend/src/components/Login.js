@@ -22,13 +22,13 @@ const Login = ({ setPage, setToken, show }) => {
                 const token = result.data.login.value;
                 setToken(token);
                 await localStorage.setItem("user-token", token);
-                setPage("authors");
             }
 
             setAccess();
             console.log(`logged in`);
+            setPage("authors");
         }
-    }, [result.data]);
+    }, [result.data, setToken, setPage]);
 
     if (!show) {
         return null;
