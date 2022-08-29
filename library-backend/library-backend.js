@@ -265,7 +265,7 @@ const resolvers = {
         createUser: async (root, args) => {
             const user = new User({
                 username: args.username,
-
+                favoriteGenre: args.favoriteGenre,
                 password: JWT_SECRET,
             });
             console.log(user);
