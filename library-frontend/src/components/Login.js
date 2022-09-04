@@ -16,25 +16,23 @@ const Login = ({ setPage, setToken, show }) => {
         setUsername("");
         setPassword("");
     };
+
     useEffect(() => {
         if (result.data) {
-            async function setAccess() {
-                const token = result.data.login.value;
-                setToken(token);
-                await localStorage.setItem("user-token", token);
-            }
-
-            setAccess();
-            console.log(`logged in`);
-            setPage("authors");
+            const token = result.data.login.value;
+            localStorage.setItem("user-token", token);
+            setToken(token);
         }
-    }, [result.data, setToken, setPage]);
+
+        console.log(`logged in`);
+        setPage("authors");
+    }, [result.data]);
 
     if (!show) {
         return null;
     }
 
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
         login({ variables: { username, password } });
         cleanFields();

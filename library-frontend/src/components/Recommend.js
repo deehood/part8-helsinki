@@ -1,17 +1,25 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries/ALL_BOOKS";
 import { ME } from "../queries/ME";
-import { useState } from "react";
 
 const Recommend = ({ show }) => {
     const books = useQuery(ALL_BOOKS);
     const me = useQuery(ME);
     if (!show) return null;
+
     if (books.loading | me.loading) {
         return <div>loading...</div>;
-    } else if (!me.data.me) console.log(me.data);
+    }
 
-    if (books.data.error) return <>{books.error.message}</>;
+    me.refetch();
+
+    if (books?.error | me?.error)
+        return (
+            <>
+                {books.error.message} {me.error.message}
+                {" Error"}
+            </>
+        );
     else {
         return !me.data?.me?.favoriteGenre ? (
             <>no favorite genre defined</>
