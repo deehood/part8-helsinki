@@ -187,23 +187,19 @@ const resolvers = {
 
         // Must pass root
         allBooks: async (root, args) => {
-            // returns all books by default .
-            let result = await Book.find({});
-            if (args.author) {
-                const foundAuthor = await Author.findOne({ name: args.author });
-                result = result.filter(
-                    (book) =>
-                        book.author.toString() === foundAuthor._id.toString()
-                );
-            }
+            // .only gets what it needs
+
+            const author = args.author
+                ? await Author.findOne({ name: args.author })
+                : null;
+
+            let query = author ? { author: author._id } : {};
 
             if (args.genre) {
-                result = result.filter((book) =>
-                    book.genres.includes(args.genre)
-                );
+                query = { ...query, genres: args.genre };
             }
 
-            return result;
+            return Book.find(query).populate("author");
         },
         allAuthors: async (root, args) => {
             const results = await Author.find({});
