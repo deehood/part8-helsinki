@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries/ALL_BOOKS";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const Books = (props) => {
     const [genre, setGenre] = useState(null);
     const result = useQuery(ALL_BOOKS, { variables: { genre } });
-
+    const uniqueGenres = useRef(null);
     if (!props.show) {
         return null;
     }
@@ -16,16 +16,17 @@ const Books = (props) => {
     if (result.error) return <>{result.error.message}</>;
 
     result.refetch();
-    const uniqueGenres = Array.from(
-        new Set(result.data.allBooks.map((obj) => obj.genres).flat())
-    );
+    if (uniqueGenres.current === null)
+        uniqueGenres.current = Array.from(
+            new Set(result.data.allBooks.map((obj) => obj.genres).flat())
+        );
     return (
         <div>
             <h2>books</h2>
             <b>Genres</b>
             <br />
             <button onClick={() => setGenre(null)}>All</button>
-            {uniqueGenres.map((genre, index) => (
+            {uniqueGenres.current.map((genre, index) => (
                 <button key={index} onClick={() => setGenre(genre)}>
                     {genre}
                 </button>
