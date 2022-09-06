@@ -9,7 +9,7 @@ const NewBook = (props) => {
     const [author, setAuthor] = useState("");
     const [published, setPublished] = useState("");
     const [genre, setGenre] = useState("");
-    const [genres, setGenres] = useState([]);
+    const [genresArray, setGenresArray] = useState([]);
 
     const CREATE_BOOK = gql`
         mutation addBook(
@@ -33,20 +33,21 @@ const NewBook = (props) => {
     const [addBook] = useMutation(CREATE_BOOK, {
         refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
     });
-    const addGenre = () => {
-        setGenres(genres.concat(genre));
-        setGenre("");
-    };
-
     if (!props.show) {
         return null;
     }
+    const addGenre = () => {
+        if (genre) setGenresArray(genresArray.concat(genre));
+        setGenre("");
+    };
 
     const submit = async (event) => {
-        if (genre) addGenre();
         event.preventDefault();
+        let genres = [...genresArray];
+        if (genre) genres = genresArray.concat(genre);
 
-        const result = await addBook({
+        console.log(genre, genres);
+        await addBook({
             variables: {
                 title,
                 author,
@@ -54,11 +55,11 @@ const NewBook = (props) => {
                 genres,
             },
         });
-        console.log(result);
+
         setTitle("");
         setPublished("");
         setAuthor("");
-        setGenres([]);
+        setGenresArray([]);
         setGenre("");
     };
 
@@ -96,8 +97,8 @@ const NewBook = (props) => {
                         add genre
                     </button>
                 </div>
-                <div>genres: {genres.join(" ")}</div>
-                <button type="submit">create book</button>
+                <div>genres: {genresArray.join(" ")}</div>
+                <button>create book</button>
             </form>
         </div>
     );
