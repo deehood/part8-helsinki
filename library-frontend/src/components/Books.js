@@ -1,36 +1,34 @@
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries/ALL_BOOKS";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Books = (props) => {
-    const [genreFilter, setGenreFilter] = useState(null);
-    const result = useQuery(ALL_BOOKS);
+    const [genre, setGenre] = useState(null);
+    const result = useQuery(ALL_BOOKS, { variables: { genre } });
+    const uniqueGenres = useRef();
+    useEffect(() => {
+        uniqueGenres.current = Array.from(
+            new Set(result.data.allBooks.map((obj) => obj.genres).flat())
+        );
+    }, [result.data.allBooks]);
 
     if (!props.show) {
         return null;
     }
-
     if (result.loading) {
         return <div>loading...</div>;
     }
 
     if (result.error) return <>{result.error.message}</>;
-    else {
-        let uniqueGenresSet = new Set(
-            result.data.allBooks.map((obj) => obj.genres).flat()
-        );
-
-        // transform set in array to use map in render
-        const uniqueGenresArray = [...uniqueGenresSet];
-
+    else
         return (
             <div>
                 <h2>books</h2>
                 <b>Genres</b>
                 <br />
-                <button onClick={() => setGenreFilter(null)}>All</button>
-                {uniqueGenresArray.map((genre, index) => (
-                    <button key={index} onClick={() => setGenreFilter(genre)}>
+                <button onClick={() => setGenre(null)}>All</button>
+                {uniqueGenres.current.map((genre, index) => (
+                    <button key={index} onClick={() => setGenre(genre)}>
                         {genre}
                     </button>
                 ))}
@@ -44,25 +42,18 @@ const Books = (props) => {
                             <th>genres</th>
                         </tr>
 
-                        {result.data.allBooks
-                            .filter((a) =>
-                                genreFilter
-                                    ? a.genres.includes(genreFilter)
-                                    : a.genres
-                            )
-                            .map((x) => (
-                                <tr key={x.title}>
-                                    <td>{x.title}</td>
-                                    <td>{x.author.name}</td>
-                                    <td>{x.published}</td>
-                                    <td>{x.genres.map((a) => a + ", ")}</td>
-                                </tr>
-                            ))}
+                        {result.data.allBooks.map((x) => (
+                            <tr key={x.title}>
+                                <td>{x.title}</td>
+                                <td>{x.author.name}</td>
+                                <td>{x.published}</td>
+                                <td>{x.genres.map((a) => a + ", ")}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
         );
-    }
 };
 
 export default Books;
