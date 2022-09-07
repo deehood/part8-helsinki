@@ -22,10 +22,9 @@ const Login = ({ setPage, setToken, show }) => {
             const token = result.data.login.value;
             localStorage.setItem("user-token", token);
             setToken(token);
+            console.log(`logged in`);
+            setPage("authors");
         }
-
-        console.log(`logged in`);
-        setPage("authors");
     }, [result.data]);
 
     if (!show) {
