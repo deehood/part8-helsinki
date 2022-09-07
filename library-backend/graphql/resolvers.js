@@ -1,4 +1,8 @@
 const { AuthenticationError, UserInputError } = require("apollo-server");
+
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
+
 const Author = require("../models/Author");
 const Book = require("../models/Book");
 const User = require("../models/User");
@@ -79,6 +83,7 @@ const resolvers = {
                     invalidArgs: args,
                 });
             }
+            pubsub.publish("BOOK_ADDED", { bookAdded: book });
             return book;
         },
         editAuthor: async (root, args, context) => {
@@ -123,6 +128,11 @@ const resolvers = {
             };
 
             return { value: jwt.sign(userForToken, JWT_SECRET) };
+        },
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
         },
     },
 };

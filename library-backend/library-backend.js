@@ -1,5 +1,8 @@
 const { ApolloServer } = require("apollo-server-express");
 
+const { execute, subscribe } = require("graphql");
+const { SubscriptionServer } = require("subscriptions-transport-ws");
+
 const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const express = require("express");
@@ -126,6 +129,11 @@ const start = async () => {
 
     const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+    const subscriptionServer = SubscriptionServer.create(
+        { schema, execute, subscribe },
+        { server: httpServer, path: "" }
+    );
+
     const server = new ApolloServer({
         schema,
         context: async ({ req }) => {
@@ -136,7 +144,18 @@ const start = async () => {
                 return { currentUser };
             }
         },
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        plugins: [
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+            {
+                async serverWillStart() {
+                    return {
+                        async drainServer() {
+                            subscriptionServer.close();
+                        },
+                    };
+                },
+            },
+        ],
     });
 
     await server.start();
