@@ -25,6 +25,7 @@ const Login = ({ setPage, setToken, show }) => {
             console.log(`logged in`);
             setPage("authors");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [result.data]);
 
     if (!show) {
