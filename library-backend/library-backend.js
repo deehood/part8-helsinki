@@ -1,17 +1,24 @@
-const { ApolloServer } = require("apollo-server");
-const jwt = require("jsonwebtoken");
+const { ApolloServer } = require("apollo-server-express");
+
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const express = require("express");
+const http = require("http");
+
 // const { UniqueDirectiveNamesRule } = require("graphql");
 // const { v4: uuid } = require("uuid");
 // const { collection } = require("./models/Author");
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 require("dotenv").config();
-console.log("connecting....");
-
 const User = require("./models/User");
 const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 const JWT_SECRET = process.env.SECRET;
 const MONGODB_URI = process.env.MONGODB_URI;
+
+console.log("connecting....");
+
 mongoose
     .connect(MONGODB_URI)
     .then(() => {
@@ -113,20 +120,37 @@ mongoose
 
 // loadInitial();
 
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: async ({ req }) => {
-        const auth = req ? req.headers.authorization : null;
-        if (auth && auth.toLowerCase().startsWith("bearer ")) {
-            const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
-            const currentUser = await User.findById(decodedToken.id);
+const start = async () => {
+    const app = express();
+    const httpServer = http.createServer(app);
 
-            return { currentUser };
-        }
-    },
-});
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url} 🚀`);
-});
+    const server = new ApolloServer({
+        schema,
+        context: async ({ req }) => {
+            const auth = req ? req.headers.authorization : null;
+            if (auth && auth.toLowerCase().startsWith("bearer ")) {
+                const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+                const currentUser = await User.findById(decodedToken.id);
+                return { currentUser };
+            }
+        },
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    });
+
+    await server.start();
+
+    server.applyMiddleware({
+        app,
+        path: "/",
+    });
+
+    const PORT = 4000;
+
+    httpServer.listen(PORT, () =>
+        console.log(`Server is now running on http://localhost:${PORT}`)
+    );
+};
+
+start();
