@@ -14,6 +14,7 @@ const Author = require("./models/Author");
 const Book = require("./models/Book");
 const User = require("./models/User");
 const { collection } = require("./models/Author");
+const typeDefs = require("./graphql/schema");
 
 const JWT_SECRET = process.env.SECRET;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -26,143 +27,97 @@ mongoose
         console.log("error connecting : ", error.message);
     });
 
-let authors = [
-    {
-        name: "Robert Martin",
+// let authors = [
+//     {
+//         name: "Robert Martin",
 
-        born: 1952,
-    },
-    {
-        name: "Martin Fowler",
-        born: 1963,
-    },
-    {
-        name: "Fyodor Dostoevsky",
-        born: 1821,
-    },
-    {
-        name: "hello ",
-        born: 1821,
-    },
-    {
-        name: "Joshua Kerievsky", // birthyear not known
-    },
-    {
-        name: "Mick Metz", // birthyear not known
-    },
-];
+//         born: 1952,
+//     },
+//     {
+//         name: "Martin Fowler",
+//         born: 1963,
+//     },
+//     {
+//         name: "Fyodor Dostoevsky",
+//         born: 1821,
+//     },
+//     {
+//         name: "hello ",
+//         born: 1821,
+//     },
+//     {
+//         name: "Joshua Kerievsky", // birthyear not known
+//     },
+//     {
+//         name: "Mick Metz", // birthyear not known
+//     },
+// ];
 
-let books = [
-    {
-        title: "Clean Code",
-        published: 2008,
-        author: "Robert Martin",
-        genres: ["refactoring"],
-    },
-    {
-        title: "Agile software development",
-        published: 2002,
-        author: "Robert Martin",
-        genres: ["agile", "patterns", "design"],
-    },
-    {
-        title: "Refactoring, edition 2",
-        published: 2018,
-        author: "Martin Fowler",
-        genres: ["refactoring"],
-    },
+// let books = [
+//     {
+//         title: "Clean Code",
+//         published: 2008,
+//         author: "Robert Martin",
+//         genres: ["refactoring"],
+//     },
+//     {
+//         title: "Agile software development",
+//         published: 2002,
+//         author: "Robert Martin",
+//         genres: ["agile", "patterns", "design"],
+//     },
+//     {
+//         title: "Refactoring, edition 2",
+//         published: 2018,
+//         author: "Martin Fowler",
+//         genres: ["refactoring"],
+//     },
 
-    {
-        title: "Refactoring to patterns",
-        published: 2008,
-        author: "Joshua Kerievsky",
-        genres: ["refactoring", "patterns"],
-    },
-    {
-        title: "Practical Object-Oriented Design, An Agile Primer Using Ruby",
-        published: 2012,
-        author: "Mick Metz",
-        genres: ["refactoring", "design"],
-    },
-    {
-        title: "Crime and punishment",
-        published: 1866,
-        author: "Fyodor Dostoevsky",
-        genres: ["classic", "crime"],
-    },
-    {
-        title: "The Demon ",
-        published: 1872,
-        author: "Fyodor Dostoevsky",
-        genres: ["classic", "revolution"],
-    },
-];
+//     {
+//         title: "Refactoring to patterns",
+//         published: 2008,
+//         author: "Joshua Kerievsky",
+//         genres: ["refactoring", "patterns"],
+//     },
+//     {
+//         title: "Practical Object-Oriented Design, An Agile Primer Using Ruby",
+//         published: 2012,
+//         author: "Mick Metz",
+//         genres: ["refactoring", "design"],
+//     },
+//     {
+//         title: "Crime and punishment",
+//         published: 1866,
+//         author: "Fyodor Dostoevsky",
+//         genres: ["classic", "crime"],
+//     },
+//     {
+//         title: "The Demon ",
+//         published: 1872,
+//         author: "Fyodor Dostoevsky",
+//         genres: ["classic", "revolution"],
+//     },
+// ];
 
-const loadInitial = async () => {
-    await Author.collection.drop();
-    await Book.collection.drop();
+// const loadInitial = async () => {
+//     await Author.collection.drop();
+//     await Book.collection.drop();
 
-    for (const author of authors) {
-        const newAuthor = new Author(author);
+//     for (const author of authors) {
+//         const newAuthor = new Author(author);
 
-        await newAuthor.save();
-    }
-    for (const book of books) {
-        console.log(book);
-        const authorObj = await Author.findOne({ name: book.author });
+//         await newAuthor.save();
+//     }
+//     for (const book of books) {
+//         console.log(book);
+//         const authorObj = await Author.findOne({ name: book.author });
 
-        const newBook = new Book({ ...book, author: authorObj });
-        await newBook.save();
-    }
-};
+//         const newBook = new Book({ ...book, author: authorObj });
+//         await newBook.save();
+//     }
+// };
 
 // loadInitial();
-
-const typeDefs = gql`
-    type User {
-        username: String!
-        favoriteGenre: String
-        id: ID!
-    }
-
-    type Token {
-        value: String!
-    }
-    type Author {
-        name: String!
-        born: Int
-        bookCount: Int!
-        id: ID!
-    }
-    type Book {
-        title: String!
-        published: Int!
-        author: Author!
-        genres: [String]!
-        id: ID!
-    }
-    type Query {
-        me: User
-        authorCount: Int!
-        bookCount: Int!
-        allBooks(author: String, genre: String): [Book!]!
-        allAuthors: [Author!]!
-    }
-
-    type Mutation {
-        addBook(
-            title: String!
-            author: String!
-            published: Int!
-            genres: [String]
-        ): Book!
-
-        editAuthor(name: String!, bornChange: Int!): Author
-
-        createUser(username: String!, favoriteGenre: String!): User
-        login(username: String!, password: String!): Token
-    }
-`;
 
 const resolvers = {
     Author: {
@@ -286,7 +241,6 @@ const resolvers = {
         },
     },
 };
-
 const server = new ApolloServer({
     typeDefs,
     resolvers,
