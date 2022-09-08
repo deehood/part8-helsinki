@@ -16,8 +16,7 @@ const Recommended = ({ show }) => {
     if (books?.error | me?.error)
         return (
             <>
-                {books.error.message} {me.error.message}
-                {" Error"}
+                Error : {books.error.message} {me.error.message}
             </>
         );
     else {
@@ -48,13 +47,15 @@ const Recommended = ({ show }) => {
                                     <td>{x.author.name}</td>
                                     <td>{x.published}</td>
                                     <td>
-                                        {x.genres.map(
-                                            (a, index) =>
-                                                a +
-                                                (index + 1 === x.genres.length
-                                                    ? ""
-                                                    : ", ")
-                                        )}
+                                        {x.genres.map((a, index) => (
+                                            <span key={index}>
+                                                {a +
+                                                    (index + 1 ===
+                                                    x.genres.length
+                                                        ? ""
+                                                        : ", ")}
+                                            </span>
+                                        ))}
                                     </td>
                                 </tr>
                             ))}

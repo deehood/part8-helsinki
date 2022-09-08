@@ -14,29 +14,35 @@ const Books = (props) => {
     // }
 
     if (result.error) return <>{result.error.message}</>;
-
+    // console.log(uniqueGenres.current);
     if (uniqueGenres.current === null && result.data) {
         uniqueGenres.current = Array.from(
             new Set(result.data.allBooks.map((obj) => obj.genres).flat())
         );
     }
     // }
-    // solution for adding book
+
+    //TODO temp solution for adding book missing genre from add book
+
     result.refetch();
     return (
         <div>
             <h2>books</h2>
             <b>Genres</b>
             <br />
-            {["All", ...uniqueGenres.current].map((mappedGenre, index) => (
-                <button
-                    className={mappedGenre === genre ? "selected-tab" : null}
-                    key={index}
-                    onClick={() => setGenre(mappedGenre)}
-                >
-                    {mappedGenre}
-                </button>
-            ))}
+            {uniqueGenres.current &&
+                ["All", ...uniqueGenres.current].map((mappedGenre, index) => (
+                    <button
+                        className={
+                            mappedGenre === genre ? "selected-tab" : null
+                        }
+                        key={index}
+                        onClick={() => setGenre(mappedGenre)}
+                    >
+                        {mappedGenre}
+                    </button>
+                ))}
+
             {result.loading === true ? null : (
                 <table>
                     <tbody>
