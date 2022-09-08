@@ -39,7 +39,7 @@ const resolvers = {
 
             let query = author ? { author: author._id } : {};
 
-            if (args.genre) {
+            if (args.genre && args.genre !== "All") {
                 query = { ...query, genres: args.genre };
             }
 

@@ -3,7 +3,7 @@ import { ALL_BOOKS } from "../queries/ALL_BOOKS";
 import { useState, useRef } from "react";
 
 const Books = (props) => {
-    const [genre, setGenre] = useState(null);
+    const [genre, setGenre] = useState("All");
     const result = useQuery(ALL_BOOKS, { variables: { genre } });
     const uniqueGenres = useRef(null);
     if (!props.show) {
@@ -16,19 +16,24 @@ const Books = (props) => {
     if (result.error) return <>{result.error.message}</>;
 
     result.refetch();
-    if (uniqueGenres.current === null)
+    if (uniqueGenres.current === null) {
         uniqueGenres.current = Array.from(
             new Set(result.data.allBooks.map((obj) => obj.genres).flat())
         );
+    }
     return (
         <div>
             <h2>books</h2>
             <b>Genres</b>
             <br />
-            <button onClick={() => setGenre(null)}>All</button>
-            {uniqueGenres.current.map((genre, index) => (
-                <button key={index} onClick={() => setGenre(genre)}>
-                    {genre}
+
+            {["All", ...uniqueGenres.current].map((mappedGenre, index) => (
+                <button
+                    className={mappedGenre === genre ? "selected-genre" : null}
+                    key={index}
+                    onClick={() => setGenre(mappedGenre)}
+                >
+                    {mappedGenre}
                 </button>
             ))}
 
