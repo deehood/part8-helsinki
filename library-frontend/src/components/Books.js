@@ -14,13 +14,13 @@ const Books = (props) => {
     }
 
     if (result.error) return <>{result.error.message}</>;
-    // solution for adding book
-    result.refetch();
     if (uniqueGenres.current === null) {
         uniqueGenres.current = Array.from(
             new Set(result.data.allBooks.map((obj) => obj.genres).flat())
         );
     }
+    // solution for adding book
+    result.refetch();
     return (
         <div>
             <h2>books</h2>
