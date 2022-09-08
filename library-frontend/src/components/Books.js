@@ -30,7 +30,7 @@ const Books = (props) => {
             <br />
             {["All", ...uniqueGenres.current].map((mappedGenre, index) => (
                 <button
-                    className={mappedGenre === genre ? "selected-genre" : null}
+                    className={mappedGenre === genre ? "selected-tab" : null}
                     key={index}
                     onClick={() => setGenre(mappedGenre)}
                 >
