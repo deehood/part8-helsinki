@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries/ALL_BOOKS";
 import { ME } from "../queries/ME";
 
-const Recommend = ({ show }) => {
+const Recommended = ({ show }) => {
     const books = useQuery(ALL_BOOKS);
     const me = useQuery(ME);
     if (!show) return null;
@@ -25,7 +25,7 @@ const Recommend = ({ show }) => {
             <>no favorite genre defined</>
         ) : (
             <>
-                <h2>Recommend for {me.data.me.username}</h2>
+                <h2>Recommended for {me.data.me.username}</h2>
                 books in your favorite genre <b>"{me.data.me.favoriteGenre}"</b>
                 <br />
                 <br />
@@ -64,4 +64,4 @@ const Recommend = ({ show }) => {
         );
     }
 };
-export default Recommend;
+export default Recommended;
