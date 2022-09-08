@@ -45,7 +45,7 @@ const Books = (props) => {
                         <th>published</th>
                         <th>genres</th>
                     </tr>
-
+                    {result.loading === true} ? null :
                     {result.data.allBooks.map((x) => (
                         <tr key={x.title}>
                             <td>{x.title}</td>
