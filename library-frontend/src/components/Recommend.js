@@ -47,7 +47,15 @@ const Recommend = ({ show }) => {
                                     <td>{x.title}</td>
                                     <td>{x.author.name}</td>
                                     <td>{x.published}</td>
-                                    <td>{x.genres.map((a) => a + ", ")}</td>
+                                    <td>
+                                        {x.genres.map(
+                                            (a, index) =>
+                                                a +
+                                                (index + 1 === x.genres.length
+                                                    ? ""
+                                                    : ", ")
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                     </tbody>
