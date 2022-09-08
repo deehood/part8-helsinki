@@ -14,7 +14,7 @@ const Books = (props) => {
     }
 
     if (result.error) return <>{result.error.message}</>;
-
+    // solution for adding book
     result.refetch();
     if (uniqueGenres.current === null) {
         uniqueGenres.current = Array.from(
@@ -51,7 +51,15 @@ const Books = (props) => {
                             <td>{x.title}</td>
                             <td>{x.author.name}</td>
                             <td>{x.published}</td>
-                            <td>{x.genres.map((a) => a + ", ")}</td>
+                            <td>
+                                {x.genres.map(
+                                    (a, index) =>
+                                        a +
+                                        (index + 1 === x.genres.length
+                                            ? ""
+                                            : ", ")
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
