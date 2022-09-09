@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { ALL_AUTHORS } from "../queries/ALL_AUTHORS";
+import { ALL_AUTHORS } from "../queries";
 import SetBirthYear from "./SetBirthYear";
 
 const Authors = ({ token, show }) => {

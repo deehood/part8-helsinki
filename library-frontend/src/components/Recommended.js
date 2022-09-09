@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries/ALL_BOOKS";
-import { ME } from "../queries/ME";
+import { ALL_BOOKS, ME } from "../queries";
 
 const Recommended = ({ show }) => {
     const books = useQuery(ALL_BOOKS);
