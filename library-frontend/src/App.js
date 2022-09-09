@@ -25,70 +25,58 @@ const App = () => {
         }
     }, [token]);
 
-    const menu = ["authors", "books", "add", "recommended", "login", "logout"];
+    const menu = {
+        authors: "alwaysShow",
+        books: "alwaysShow",
+        add: "restrict",
+        recommended: "restrict",
+        logout: "restrict",
+        login: "notLogged",
+    };
 
     return (
         <div>
             <div>
-                <button
-                    className={page === menu[0] ? "selected-tab" : null}
-                    onClick={() => setPage(menu[0])}
-                >
-                    {menu[0]}
-                </button>
-                <button
-                    className={page === menu[1] ? "selected-tab" : null}
-                    onClick={() => setPage(menu[1])}
-                >
-                    {menu[1]}
-                </button>
-
-                {token && (
-                    <>
+                {Object.entries(menu).map(([key, value]) =>
+                    value === "alwaysShow" ||
+                    (value === "restrict" && token) ? (
                         <button
-                            className={page === menu[2] ? "selected-tab" : null}
-                            onClick={() => setPage(menu[2])}
+                            key={key}
+                            className={page === key ? "selected-tab" : null}
+                            onClick={() => {
+                                if (key === "logout") {
+                                    setToken(null);
+                                    localStorage.clear();
+                                    client.resetStore();
+                                    setPage("login");
+                                } else setPage(key);
+                            }}
                         >
-                            {menu[2]} book
+                            {key}
                         </button>
-                        <button
-                            className={page === menu[3] ? "selected-tab" : null}
-                            onClick={() => setPage(menu[3])}
-                        >
-                            {menu[3]}
-                        </button>
-                    </>
-                )}
-
-                {!token ? (
-                    <button
-                        className={page === menu[4] ? "selected-tab" : null}
-                        onClick={() => setPage(menu[4])}
-                    >
-                        {menu[4]}
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => {
-                            setToken(null);
-                            localStorage.clear();
-                            client.resetStore();
-                            setPage("login");
-                        }}
-                    >
-                        logout
-                    </button>
+                    ) : (
+                        value === "notLogged" &&
+                        !token && (
+                            <button
+                                key={key}
+                                className={page === key ? "selected-tab" : null}
+                                onClick={() => setPage(key)}
+                            >
+                                {key}
+                            </button>
+                        )
+                    )
                 )}
             </div>
 
-            <Authors token={token} show={page === menu[0]} />
-            <Books show={page === menu[1]} />
-            <NewBook show={page === menu[2]} />
-            <Recommended show={page === menu[3]} />
+            <Authors token={token} show={page === "authors"} />
+            <Books show={page === "books"} />
+            <NewBook show={page === "add"} />
+            <Recommended show={page === "recommended"} />
             <Login
                 setPage={setPage}
                 setToken={setToken}
-                show={page === menu[4]}
+                show={page === "login"}
             />
         </div>
     );
