@@ -14,25 +14,31 @@ const Authors = ({ token, show }) => {
 
     if (result.data)
         return (
-            <div>
-                <h2>authors</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th></th>
-                            <th>born</th>
-                            <th>books</th>
-                        </tr>
-                        {result.data.allAuthors.map((a) => (
-                            <tr key={a.name}>
-                                <td>{a.name}</td>
-                                <td>{a.born}</td>
-                                <td>{a.bookCount}</td>
+            <div className={"wrapper"}>
+                <div>
+                    <h2>authors</h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <th>born</th>
+                                <th>books</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                {token && <SetBirthYear allAuthors={result.data.allAuthors} />}
+                            {result.data.allAuthors.map((a) => (
+                                <tr key={a.name}>
+                                    <td>{a.name}</td>
+                                    <td>{a.born}</td>
+                                    <td>{a.bookCount}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    {token && (
+                        <SetBirthYear allAuthors={result.data.allAuthors} />
+                    )}
+                </div>
             </div>
         );
 };
