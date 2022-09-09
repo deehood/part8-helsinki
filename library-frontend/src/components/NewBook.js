@@ -45,43 +45,56 @@ const NewBook = (props) => {
     };
 
     return (
-        <div>
-            <form onSubmit={submit}>
+        <form onSubmit={submit}>
+            <div className="wrapper-add-book">
                 <div>
-                    title
-                    <input
-                        value={title}
-                        onChange={({ target }) => setTitle(target.value)}
-                    />
+                    <div className="field">
+                        <label htmlFor="title">title</label>
+                        <input
+                            type="text"
+                            placeholder="title"
+                            id="title"
+                            value={title}
+                            onChange={({ target }) => setTitle(target.value)}
+                        />
+                    </div>
+                    <div className="field">
+                        author
+                        <input
+                            type="text"
+                            value={author}
+                            onChange={({ target }) => setAuthor(target.value)}
+                        />
+                    </div>
+                    <div className="field">
+                        published
+                        <input
+                            type="number"
+                            value={published}
+                            onChange={({ target }) =>
+                                setPublished(target.value)
+                            }
+                        />
+                    </div>
                 </div>
-                <div>
-                    author
-                    <input
-                        value={author}
-                        onChange={({ target }) => setAuthor(target.value)}
-                    />
+                <div className="right-side">
+                    <div className="field">
+                        <label htmlFor="genre">genres</label>
+                        <input
+                            id="genre"
+                            value={genre}
+                            onChange={({ target }) => setGenre(target.value)}
+                        />
+                        <button onClick={addGenre} type="button">
+                            Add
+                        </button>
+                        <div>Added: {genresArray.join(" ")}</div>
+                    </div>
+
+                    <button>create book</button>
                 </div>
-                <div>
-                    published
-                    <input
-                        type="number"
-                        value={published}
-                        onChange={({ target }) => setPublished(target.value)}
-                    />
-                </div>
-                <div>
-                    <input
-                        value={genre}
-                        onChange={({ target }) => setGenre(target.value)}
-                    />
-                    <button onClick={addGenre} type="button">
-                        add genre
-                    </button>
-                </div>
-                <div>genres: {genresArray.join(" ")}</div>
-                <button>create book</button>
-            </form>
-        </div>
+            </div>
+        </form>
     );
 };
 

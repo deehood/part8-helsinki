@@ -6,3 +6,32 @@
     display: flex;
     gap: 2rem;
 }
+
+.wrapper-add-book {
+    display: flex;
+    gap: 2rem;
+    /* width: 500px; */
+}
+
+.wrapper-add-book .right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.7rem;
+    padding: 2px;
+}
+
+input {
+    padding: 2px;
+    width: 100%;
+    border-radius: 5px;
+    margin: 2px;
+}
+input:focus {
+    outline: 0;
+    border-bottom: 1px solid #666;
+}
