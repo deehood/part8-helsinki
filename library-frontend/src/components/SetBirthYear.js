@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { ALL_AUTHORS, EDIT_YEAR } from "../queries";
 
 const SetBirthYear = ({ allAuthors }) => {
