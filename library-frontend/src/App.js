@@ -39,6 +39,7 @@ const App = () => {
             <div>
                 {Object.entries(menu).map(([key, value]) =>
                     value === "alwaysShow" ||
+                    (value === "notLogged" && !token) ||
                     (value === "restrict" && token) ? (
                         <button
                             key={key}
@@ -54,18 +55,7 @@ const App = () => {
                         >
                             {key}
                         </button>
-                    ) : (
-                        value === "notLogged" &&
-                        !token && (
-                            <button
-                                key={key}
-                                className={page === key ? "selected-tab" : null}
-                                onClick={() => setPage(key)}
-                            >
-                                {key}
-                            </button>
-                        )
-                    )
+                    ) : null
                 )}
             </div>
 
