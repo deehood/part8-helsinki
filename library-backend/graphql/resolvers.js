@@ -11,6 +11,7 @@ const JWT_SECRET = process.env.SECRET;
 const resolvers = {
     Author: {
         bookCount: async (root) => {
+            console.log("bookcount");
             const books = await Book.find({ author: root.id });
             return books.length;
         },
@@ -28,7 +29,6 @@ const resolvers = {
         },
         authorCount: async () => Author.collection.countDocuments(),
         bookCount: async () => Book.collection.countDocuments(),
-
         // Must pass root
         allBooks: async (root, args) => {
             // .only gets what it needs
@@ -46,7 +46,8 @@ const resolvers = {
             return Book.find(query).populate("author");
         },
         allAuthors: async (root, args) => {
-            const results = await Author.find({});
+            const results = await Author.find({}).populate("book");
+            console.log("allAuthors");
 
             return results;
         },
@@ -118,7 +119,7 @@ const resolvers = {
         },
         login: async (root, args) => {
             const user = await User.findOne({ username: args.username });
-
+            console.log("login");
             if (!user || args.password !== JWT_SECRET) {
                 throw new UserInputError("wrong credentials");
             }

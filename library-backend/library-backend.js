@@ -15,6 +15,8 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const User = require("./models/User");
+const Author = require("./models/Author");
+const Book = require("./models/Book");
 const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 const JWT_SECRET = process.env.SECRET;
@@ -30,6 +32,8 @@ mongoose
     .catch((error) => {
         console.log("error connecting : ", error.message);
     });
+
+mongoose.set("debug", true);
 
 // let authors = [
 //     {
@@ -84,7 +88,7 @@ mongoose
 //         genres: ["refactoring", "patterns"],
 //     },
 //     {
-//         title: "Practical Object-Oriented Design, An Agile Primer Using Ruby",
+//         title: "Practical Object-Oriented Design",
 //         published: 2012,
 //         author: "Mick Metz",
 //         genres: ["refactoring", "design"],
@@ -104,8 +108,7 @@ mongoose
 // ];
 
 // const loadInitial = async () => {
-//     await Author.collection.drop();
-//     await Book.collection.drop();
+//       await Book.collection.drop();
 
 //     for (const author of authors) {
 //         const newAuthor = new Author(author);

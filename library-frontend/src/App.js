@@ -3,6 +3,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
+import NPlusOne from "./components/NPlusOne";
 import Recommended from "./components/Recommended";
 import { useApolloClient, useSubscription } from "@apollo/client";
 import { BOOK_ADDED, ALL_BOOKS } from "./queries";
@@ -29,6 +30,7 @@ const App = () => {
     const menu = {
         authors: "alwaysShow",
         books: "alwaysShow",
+        NPlusOne: "alwaysShow",
         add: "restrict",
         recommended: "restrict",
         logout: "restrict",
@@ -40,6 +42,7 @@ const App = () => {
             console.log(subscriptionData.data.bookAdded.title);
             alert(`book - ${subscriptionData.data.bookAdded.title} was added`);
             client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+                console.log(allBooks.concat(subscriptionData.data.bookAdded));
                 return {
                     allBooks: allBooks.concat(subscriptionData.data.bookAdded),
                 };
@@ -75,6 +78,7 @@ const App = () => {
             <Authors token={token} show={page === "authors"} />
             <Books show={page === "books"} />
             <NewBook show={page === "add"} />
+            <NPlusOne show={page === "NPlusOne"} />
             <Recommended show={page === "recommended"} />
             <Login
                 setPage={setPage}

@@ -32,6 +32,15 @@ const BOOK_DETAILS = gql`
     }
 `;
 
+export const N_PLUS_ONE = gql`
+    query {
+        allAuthors {
+            name
+            bookCount
+        }
+    }
+`;
+
 export const BOOK_ADDED = gql`
     subscription {
         bookAdded {

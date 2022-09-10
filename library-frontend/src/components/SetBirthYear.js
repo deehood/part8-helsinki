@@ -3,8 +3,8 @@ import { useMutation } from "@apollo/client";
 import { ALL_AUTHORS, EDIT_YEAR } from "../queries";
 
 const SetBirthYear = ({ allAuthors }) => {
-    const [name, setName] = useState(allAuthors[0].name);
-    const [bornChange, setBornChange] = useState(allAuthors[0].born);
+    const [name, setName] = useState(allAuthors[0]?.name || "");
+    const [bornChange, setBornChange] = useState(allAuthors[0]?.born || 0);
 
     const [editAuthor] = useMutation(EDIT_YEAR, {
         refetchQueries: [{ query: ALL_AUTHORS }],
