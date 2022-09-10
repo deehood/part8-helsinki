@@ -9,9 +9,6 @@ const Books = (props) => {
     if (!props.show) {
         return null;
     }
-    // if (result.loading) {
-    //     return <div>loading...</div>;
-    // }
 
     if (result.error) return <>{result.error.message}</>;
     // console.log(uniqueGenres.current);
