@@ -48,7 +48,7 @@ const App = () => {
     });
 
     return (
-        <div>
+        <div className="main-container">
             <div>
                 {Object.entries(menu).map(([key, value]) =>
                     value === "alwaysShow" ||

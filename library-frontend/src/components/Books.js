@@ -39,7 +39,7 @@ const Books = (props) => {
                         {mappedGenre}
                     </button>
                 ))}
-
+            <br /> <br />
             {result.loading === true ? null : (
                 <table>
                     <tbody>

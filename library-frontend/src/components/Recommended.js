@@ -26,7 +26,6 @@ const Recommended = ({ show }) => {
                 <h2>Recommended for {me.data.me.username}</h2>
                 books in your favorite genre <b>"{me.data.me.favoriteGenre}"</b>
                 <br />
-                <br />
                 <table>
                     <tbody>
                         <tr>
