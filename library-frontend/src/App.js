@@ -39,7 +39,6 @@ const App = () => {
 
     useSubscription(BOOK_ADDED, {
         onSubscriptionData: ({ subscriptionData }) => {
-            console.log(subscriptionData.data.bookAdded.title);
             alert(`book - ${subscriptionData.data.bookAdded.title} was added`);
             client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
                 console.log(allBooks.concat(subscriptionData.data.bookAdded));

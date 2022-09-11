@@ -11,13 +11,12 @@ const Books = (props) => {
     }
 
     if (result.error) return <>{result.error.message}</>;
-    // console.log(uniqueGenres.current);
+
     if (uniqueGenres.current === null && result.data) {
         uniqueGenres.current = Array.from(
             new Set(result.data.allBooks.map((obj) => obj.genres).flat())
         );
     }
-    // }
 
     //TODO temp solution for adding book missing genre from add book
 
