@@ -22,6 +22,14 @@ const NewBook = (props) => {
         setGenre("");
     };
 
+    const clearFields = () => {
+        setTitle("");
+        setPublished("");
+        setAuthor("");
+        setGenresArray([]);
+        setGenre("");
+    };
+
     const submit = async (event) => {
         event.preventDefault();
         let genres = [...genresArray];
@@ -31,16 +39,12 @@ const NewBook = (props) => {
             variables: {
                 title,
                 author,
-                published: parseInt(published),
+                published: parseInt(published) || 0,
                 genres,
             },
         });
 
-        setTitle("");
-        setPublished("");
-        setAuthor("");
-        setGenresArray([]);
-        setGenre("");
+        clearFields();
     };
 
     return (
@@ -51,7 +55,6 @@ const NewBook = (props) => {
                         <label htmlFor="title">title</label>
                         <input
                             type="text"
-                            placeholder="title"
                             id="title"
                             value={title}
                             onChange={({ target }) => setTitle(target.value)}
@@ -75,11 +78,13 @@ const NewBook = (props) => {
                             }
                         />
                     </div>
+                    <button onClick={clearFields}>clear fields</button>
                 </div>
                 <div className="right-side">
                     <div className="field">
                         <label htmlFor="genre">genres</label>
                         <input
+                            type="text"
                             id="genre"
                             value={genre}
                             onChange={({ target }) => setGenre(target.value)}

@@ -1,10 +1,27 @@
-import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries";
+import { useQuery, useSubscription } from "@apollo/client";
+import { ALL_BOOKS, BOOK_ADDED } from "../queries";
 import { useState, useRef } from "react";
 
 const Books = (props) => {
     const [genre, setGenre] = useState("All");
     const result = useQuery(ALL_BOOKS, { variables: { genre } });
+
+    useSubscription(BOOK_ADDED, {
+        onSubscriptionData: ({ subscriptionData, client }) => {
+            alert(`book - ${subscriptionData.data.bookAdded.title} was added`);
+            client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+                console.log(allBooks.concat(subscriptionData.data.bookAdded));
+
+                client.refetchQueries({
+                    include: [ALL_BOOKS],
+                });
+                return {
+                    allBooks: allBooks.concat(subscriptionData.data.bookAdded),
+                };
+            });
+        },
+    });
+
     const uniqueGenres = useRef(null);
     if (!props.show) {
         return null;
@@ -18,11 +35,6 @@ const Books = (props) => {
         );
     }
 
-    //TODO temp solution for adding book missing genre from add book
-
-    // result.refetch();
-
-    if (result.data) console.log(result.data);
     return (
         <div>
             <h2>books</h2>

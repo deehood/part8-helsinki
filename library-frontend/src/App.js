@@ -5,8 +5,7 @@ import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 import NPlusOne from "./components/NPlusOne";
 import Recommended from "./components/Recommended";
-import { useApolloClient, useSubscription } from "@apollo/client";
-import { BOOK_ADDED, ALL_BOOKS } from "./queries";
+import { useApolloClient } from "@apollo/client";
 
 const App = () => {
     const [page, setPage] = useState("authors");
@@ -36,18 +35,6 @@ const App = () => {
         logout: "restrict",
         login: "notLogged",
     };
-
-    useSubscription(BOOK_ADDED, {
-        onSubscriptionData: ({ subscriptionData }) => {
-            alert(`book - ${subscriptionData.data.bookAdded.title} was added`);
-            client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-                console.log(allBooks.concat(subscriptionData.data.bookAdded));
-                return {
-                    allBooks: allBooks.concat(subscriptionData.data.bookAdded),
-                };
-            });
-        },
-    });
 
     return (
         <div className="main-container">

@@ -11,8 +11,6 @@ const NPlusOne = ({ token, show }) => {
         return <div>loading...</div>;
     }
 
-    if (result.data) console.log(result);
-
     if (result.data)
         return (
             <div className={"wrapper"}>

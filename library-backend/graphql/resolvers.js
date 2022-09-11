@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.SECRET;
 const resolvers = {
     // Author: {
     //     bookCount: async (root) => {
-    //         console.log("bookcount");
+    //         console.log("bookCount");
     //         const books = await Book.find({ author: root.id });
     //         return books.length;
     //     },
