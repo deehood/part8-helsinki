@@ -9,13 +9,13 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.SECRET;
 const resolvers = {
-    Author: {
-        bookCount: async (root) => {
-            console.log("bookcount");
-            const books = await Book.find({ author: root.id });
-            return books.length;
-        },
-    },
+    // Author: {
+    //     bookCount: async (root) => {
+    //         console.log("bookcount");
+    //         const books = await Book.find({ author: root.id });
+    //         return books.length;
+    //     },
+    // },
     Book: {
         author: async (root) => {
             const author = await Author.findById(root.author);
@@ -42,14 +42,29 @@ const resolvers = {
             if (args.genre && args.genre !== "All") {
                 query = { ...query, genres: args.genre };
             }
-
             return Book.find(query).populate("author");
         },
-        allAuthors: async (root, args) => {
-            const results = await Author.find({}).populate("book");
-            console.log("allAuthors");
 
-            return results;
+        allAuthors: async (root, args) => {
+            const books = await Book.find({}).populate("author", {
+                name: 1,
+                born: 1,
+            });
+
+            const authors = books.reduce((authorArr, book) => {
+                return authorArr.find(({ name }) => name === book.author?.name)
+                    ? authorArr
+                    : [...authorArr, book.author];
+            }, []);
+
+            const count = authors.map((author) => ({
+                ...author.toJSON(),
+                bookCount: books.filter(
+                    (book) => book.author?.name === author.name
+                ).length,
+            }));
+
+            return count;
         },
     },
 

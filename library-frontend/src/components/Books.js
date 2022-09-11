@@ -22,6 +22,8 @@ const Books = (props) => {
     //TODO temp solution for adding book missing genre from add book
 
     // result.refetch();
+
+    if (result.data) console.log(result.data);
     return (
         <div>
             <h2>books</h2>

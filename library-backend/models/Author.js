@@ -10,10 +10,12 @@ const schema = new mongoose.Schema({
     born: {
         type: Number,
     },
-    book: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Book",
-    },
+    books: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Book",
+        },
+    ],
 });
 
 module.exports = mongoose.model("Author", schema);

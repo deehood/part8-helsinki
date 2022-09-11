@@ -40,7 +40,6 @@ const typeDefs = gql`
         ): Book!
 
         editAuthor(name: String!, bornChange: Int!): Author
-
         createUser(username: String!, favoriteGenre: String!): User
         login(username: String!, password: String!): Token
     }

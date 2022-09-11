@@ -26,8 +26,6 @@ const BOOK_DETAILS = gql`
         author {
             name
             born
-            bookCount
-            id
         }
     }
 `;
@@ -36,6 +34,7 @@ export const N_PLUS_ONE = gql`
     query {
         allAuthors {
             name
+
             bookCount
         }
     }
